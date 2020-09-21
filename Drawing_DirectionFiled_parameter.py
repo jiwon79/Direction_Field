@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 def diff_x(x,y):
     return 0.08*x-0.001*x*y
 def diff_y(x,y):
-    return -0.01*y+0.00002*x*y
+    return -0.02*y+0.00002*x*y
 
 def diff(x,y) :
     if diff_x(x,y) == 0 :
@@ -19,7 +19,8 @@ print("definition diff function process")
 # ----------------- input ----------------------
 x_min, x_max, x_num = 0, 3000, 30
 y_min, y_max, y_num = 0, 150, 30
-x_init, y_init = 1000,40
+time_start, time_finish = -100, 100
+x_init, y_init, time_init = 1000, 40, 0
 gridSetting = False
 print("input process")
 
@@ -43,6 +44,7 @@ for j in x:
         def fun(x1,y1):
             z = slope*(domain-x1)+y1
             return z
+        plt.figure(1)
         plt.plot(domain,fun(j,k),solid_capstyle='projecting',solid_joinstyle='bevel')
 print("drawing direction field process")
 
@@ -55,31 +57,33 @@ class outOfRange(Exception) :
 print("Error setting process")
 
 # ------- drawing graph by newton method -------
-if not x_min <= x_init <= x_max or not y_min <= y_init <= y_max :
+if not x_min <= x_init <= x_max or not y_min <= y_init <= y_max \
+    or not time_start <= time_init <= time_finish:
     raise outOfRange('초기값이 범위를 벗어났습니다')
 print("Error check process")
 
 # --------- x right direction drawing ----------
 # -------------- init setting ------------------
-maxCount = (x_max-x_min)
-count = 0
+time = time_init
 check = [0]*11
 x = x_init
 y = y_init
 
-while x_min <= x <= x_max and y_min <= y <= y_max and count < maxCount:
+# ---------------- drawing ---------------------
+while x_min <= x <= x_max and y_min <= y <= y_max and time <= time_finish:
     if diff_x(x,y) == 0:
         xNext = x
         yNext = y+1
     else :
         xNext = x+0.1*diff_x(x,y)
         yNext = y+0.1*diff_y(x,y)
+    plt.figure(1)
     plt.plot([x,xNext], [y,yNext], 'k', linewidth=1)
     x, y = xNext, yNext
-    count += 1
+    time += 0.1
 
     # loading effect
-    n = int(count/(maxCount/10))
+    n = int(10*(time-time_init)/(time_finish-time_init))
     if check[n] == 0 :
         for i in range(n):
             print("■",end='')
@@ -93,27 +97,28 @@ print("right drawing graph process")
 # -------------- init setting ------------------
 x = x_init
 y = y_init
-count = 0
+time = time_init
 check = [0]*11
 
 # ---------------- drawing ---------------------
-while x_min <= x <= x_max and y_min <= y <= y_max and count < maxCount:
+while x_min <= x <= x_max and y_min <= y <= y_max and time_start < time:
     if diff_x(x,y) == 0:
         xNext = x
         yNext = y+1
     else :
         xNext = x-0.1*diff_x(x,y)
         yNext = y-0.1*diff_y(x,y)
+    plt.figure(1)
     plt.plot([x,xNext], [y,yNext], 'k', linewidth=1)
     x, y = xNext, yNext
+    time -= 0.1
     
     # loading effect
-    count += 1
-    n = int(count/(maxCount/10))
+    n = int(10*(time-time_start)/(time_init-time_start))
     if check[n] == 0 :
-        for i in range(n+10):
+        for i in range(20-n):
             print("■",end='')
-        for i in range(10-n):
+        for i in range(n):
             print("□",end='')
         print()
         check[n] = 1
