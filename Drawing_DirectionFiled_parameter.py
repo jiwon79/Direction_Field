@@ -19,9 +19,11 @@ print("definition diff function process")
 # ----------------- input ----------------------
 x_min, x_max, x_num = 0, 3000, 30
 y_min, y_max, y_num = 0, 150, 30
-time_start, time_finish = -100, 100
+time_start, time_finish, time_interval = -10, 300, 0.1
 x_init, y_init, time_init = 1000, 40, 0
-gridSetting = False
+
+gridSet_DirectionField = False
+gridSet_population = False
 print("input process")
 
 
@@ -71,16 +73,20 @@ y = y_init
 
 # ---------------- drawing ---------------------
 while x_min <= x <= x_max and y_min <= y <= y_max and time <= time_finish:
-    if diff_x(x,y) == 0:
-        xNext = x
-        yNext = y+1
-    else :
-        xNext = x+0.1*diff_x(x,y)
-        yNext = y+0.1*diff_y(x,y)
+    xNext = x+time_interval*diff_x(x,y)
+    yNext = y+time_interval*diff_y(x,y)
+
+    # Direction Field plot
     plt.figure(1)
     plt.plot([x,xNext], [y,yNext], 'k', linewidth=1)
+    # Each population plot
+    plt.figure(2)
+    timeList = [time, time+time_interval]
+    plt.plot(timeList, [x,xNext], 'r')
+    plt.plot(timeList, [y,yNext], 'b')
+    
     x, y = xNext, yNext
-    time += 0.1
+    time += time_interval
 
     # loading effect
     n = int(10*(time-time_init)/(time_finish-time_init))
@@ -102,16 +108,20 @@ check = [0]*11
 
 # ---------------- drawing ---------------------
 while x_min <= x <= x_max and y_min <= y <= y_max and time_start < time:
-    if diff_x(x,y) == 0:
-        xNext = x
-        yNext = y+1
-    else :
-        xNext = x-0.1*diff_x(x,y)
-        yNext = y-0.1*diff_y(x,y)
+    xNext = x-time_interval*diff_x(x,y)
+    yNext = y-time_interval*diff_y(x,y)
+    # Direction Field plot
     plt.figure(1)
     plt.plot([x,xNext], [y,yNext], 'k', linewidth=1)
+    # Each population plot
+    plt.figure(2)
+    timeList = [time, time-time_interval]
+    plt.plot(timeList, [x,xNext], 'r', label='1')
+    plt.plot(timeList, [y,yNext], 'b', label='2')
+
     x, y = xNext, yNext
-    time -= 0.1
+    time -= time_interval
+    
     
     # loading effect
     n = int(10*(time-time_start)/(time_init-time_start))
@@ -125,11 +135,16 @@ while x_min <= x <= x_max and y_min <= y <= y_max and time_start < time:
 
 print("left drawing graph process")
 
-
+plt.figure(1)
 plt.title("Direction Field")
 plt.xlabel('x axis')
 plt.ylabel('y axis')
-plt.grid(gridSetting)
+plt.grid(gridSet_DirectionField)
+
+plt.figure(2)
+plt.title("Each polulation")
+plt.xlabel('time')
+plt.ylabel('population')
 plt.show()
     
 print("End of the program")

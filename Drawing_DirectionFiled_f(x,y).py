@@ -5,13 +5,13 @@ from matplotlib import pyplot as plt
 # Differential equation
 # diff = y'= diff(x,y)
 def diff(x,y):
-    return sin(x)*sin(y)
+    return 0.04*y*(1-y/1000)
 print("definition diff function process")
 
 #input
-x_min, x_max, x_num = -5, 5, 30
-y_min, y_max, y_num = -5, 5, 30
-x_init, y_init = -3,2
+x_min, x_max, x_num = -5, 200, 30
+y_min, y_max, y_num = -5, 1200, 30
+x_init, y_init = 0,150
 gridSetting = True
 print("input process")
 
